@@ -206,20 +206,30 @@ class FlxTypedWeapon<TBullet:FlxBullet>
 			case PARENT(parent, offset, useParentDirection):
 				
 				//stote new offset in a new variable
-				var actualOffset = new FlxPoint(
+				var actualOffset = FlxPoint.get(
 					FlxG.random.float(offset.min.x, offset.max.x),
 					FlxG.random.float(offset.min.y, offset.max.y));
+				
+
 				if (useParentDirection)
 				{
+					var actualOrigin = FlxPoint.get(
+						parent.origin.x - parent.offset.x,
+						parent.origin.y - parent.offset.y);
+
 					//rotate actual offset around parent origin using the parent angle
-					actualOffset = rotatePoints(actualOffset, parent.origin, parent.angle);
+					actualOffset = rotatePoints(actualOffset, actualOrigin, parent.angle);
 
 					//reposition offset to have it's origin at the new returned point
 					actualOffset.subtract(currentBullet.width/2,currentBullet.height/2);
+
+					actualOrigin.put();
 				}
 
 				currentBullet.last.x = currentBullet.x = parent.x + actualOffset.x;
 				currentBullet.last.y = currentBullet.y = parent.y + actualOffset.y;
+				
+				actualOffset.put();
 				
 			case POSITION(position):
 				currentBullet.last.x = currentBullet.x = FlxG.random.float(position.min.x, position.max.x);
